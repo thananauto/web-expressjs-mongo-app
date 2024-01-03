@@ -1,0 +1,48 @@
+version: '3.0'
+services:
+  app:
+    container_name: web_app
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - NODE_PORT=3000
+    ports:
+      - "3000:3000"
+    networks:
+      - frontend
+      - backend
+
+  mongodb:
+    container_name: mongodb
+    image: mongodb:5.0
+    ports:
+      - "27017:27017"
+    restart: unless-stopped
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=password
+    networks:
+      - backend
+
+  mongo-express:
+    image: mongo-express
+    container_name: mexpress
+    environment:
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=admin
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=password
+      - ME_CONFIG_MONGODB_SERVER=mongodb
+      - ME_CONFIG_BASICAUTH_USERNAME=admin
+      - ME_CONFIG_BASICAUTH_PASSWORD=pass
+    links:
+      - mongodb
+    restart: unless-stopped
+    ports:
+      - "8081:8081"
+    networks:
+      - backend
+      
+networks:
+  frontend:
+  backend:
