@@ -1,4 +1,4 @@
-version: '3.0'
+version: '2.4'
 services:
   app:
     container_name: web_app
@@ -8,6 +8,10 @@ services:
       dockerfile: Dockerfile
       args:
         - NODE_PORT=3000
+    depends_on:
+      mongodb:
+        condition: service_healthy
+
     ports:
       - "3000:3000"
     networks:
@@ -16,13 +20,20 @@ services:
 
   mongodb:
     container_name: mongodb
-    image: mongo:5.0
+    image: mongodb:5.0
     ports:
       - "27017:27017"
     restart: unless-stopped
     environment:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=password
+    healthcheck:
+      test: echo 'db.stats().ok' | mongo localhost:27017/test --quiet
+      interval: 10s
+      timeout: 10s
+      retries: 5
+    volumes:
+      - mongo-data:/data/db
     networks:
       - backend
 
@@ -40,9 +51,17 @@ services:
     restart: unless-stopped
     ports:
       - "8081:8081"
+    depends_on:
+      mongodb:
+        condition: service_healthy
     networks:
       - backend
-      
+
 networks:
   frontend:
   backend:
+
+volumes:
+  mongo-data:
+    driver: local
+
