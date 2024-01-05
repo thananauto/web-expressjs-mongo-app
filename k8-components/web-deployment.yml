@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-app
+  labels:
+    name: web-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: web-pod
+  template:
+    metadata:
+      name: web-pod
+      labels:
+        name: web-pod
+    spec:
+      containers:
+        - name: webapp
+          image: thanandock/sample-js-mongo-app:latest
+          ports:
+            - containerPort: 3000
+
+          env:
+            #this environment variables are parameterised in the sample image
+            - name: NODE_PORT
+              value: "3000"
+
+            - name: DB_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: mongo-config
+                  key: mongo-url
+
+            - name: MONGO_INITDB_ROOT_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: mongo-user
+
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: mongo-password
+
+
+
