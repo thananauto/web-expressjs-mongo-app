@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: web-mongo-controller
+  annotations:
+    kubernetes.io/ingress.class: gce
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            # for web
+            backend:
+              service:
+                name: web-service
+                port:
+                  number: 3000
+            # for mongo express
+          - path: /get-profile
+            pathType: Prefix
+            backend:
+              service:
+                name: mongo-express-service
+                port:
+                  number: 8081
+
