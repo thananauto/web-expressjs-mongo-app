@@ -4,6 +4,7 @@ metadata:
   name: mongo-express-web-ui
   labels:
     name: mongo-express
+  namespace: mong-exp
 spec:
   selector:
     matchLabels:
