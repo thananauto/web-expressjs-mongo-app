@@ -1,0 +1,11 @@
+apiVersion: cloud.google.com/v1
+kind: BackendConfig
+metadata:
+  name: web-test
+  namespace: mong-exp
+spec:
+  healthCheck:
+    timeoutSec: 1
+    type: HTTP
+    requestPath: /
+    port: 3000

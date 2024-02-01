@@ -3,6 +3,9 @@ kind: Service
 metadata:
   name: web-service
   namespace: mong-exp
+  annotations:
+    cloud.google.com/neg: '{"ingress": true}'
+    beta.cloud.google.com/backend-config: '{"default": "web-test"}'
 spec:
   selector:
     name: web-pod

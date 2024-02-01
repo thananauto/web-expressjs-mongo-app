@@ -3,6 +3,9 @@ kind: Service
 metadata:
   name: mongo-express-service
   namespace: mong-exp
+  annotations:
+    cloud.google.com/neg: '{"ingress": true}'
+    beta.cloud.google.com/backend-config: '{"default": "mong-exp-test"}'
 spec:
   selector:
     name: mongo-express
