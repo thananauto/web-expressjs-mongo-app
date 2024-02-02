@@ -7,5 +7,5 @@ spec:
   healthCheck:
     timeoutSec: 1
     type: HTTP
-    requestPath: /
+    requestPath: /status
     port: 8081
